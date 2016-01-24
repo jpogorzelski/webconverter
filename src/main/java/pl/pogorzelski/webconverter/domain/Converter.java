@@ -1,9 +1,6 @@
 package pl.pogorzelski.webconverter.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Converter {
@@ -15,7 +12,8 @@ public class Converter {
     private String sourceFormat = "";
 
     private String targetFormat = "";
-
+    @Lob
+    @Column(name="sourceCode", length=2048)
     private String sourceCode = "";
 
     private String className = "";

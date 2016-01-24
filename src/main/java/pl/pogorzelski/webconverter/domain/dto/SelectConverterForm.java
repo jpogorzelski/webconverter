@@ -3,14 +3,16 @@ package pl.pogorzelski.webconverter.domain.dto;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
+
 public class SelectConverterForm {
-    @NotEmpty
-    private String sourceFormat = "";
+    @NotEmpty(message = "empty.sourceFormat")
+    private String sourceFormat;
 
     @NotEmpty
-    private String targetFormat = "";
+    private String targetFormat;
 
-    @NotEmpty
+    @NotNull
     private MultipartFile file;
 
     public MultipartFile getFile() {

@@ -3,6 +3,7 @@ package pl.pogorzelski.webconverter.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.pogorzelski.webconverter.domain.Converter;
 import pl.pogorzelski.webconverter.domain.dto.NewConverterForm;
 import pl.pogorzelski.webconverter.repository.ConverterRepository;
@@ -15,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ConverterServiceImpl implements ConverterService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConverterServiceImpl.class);
@@ -25,22 +27,6 @@ public class ConverterServiceImpl implements ConverterService {
     @Inject
     public ConverterServiceImpl(ConverterRepository converterRepository) {
         this.converterRepository = converterRepository;
-
-
-        Converter format = new Converter("pdf", "jpg");
-        converterRepository.save(format);
-
-        Converter format1 = new Converter("pdf", "png");
-        converterRepository.save(format1);
-
-        Converter format2 = new Converter("pdf", "gif");
-        converterRepository.save(format2);
-
-        Converter format3 = new Converter("doc", "pdf");
-        converterRepository.save(format3);
-
-        Converter format4 = new Converter("doc", "jpg");
-        converterRepository.save(format4);
     }
 
     @Override

@@ -11,12 +11,7 @@ import pl.pogorzelski.webconverter.domain.dto.SelectConverterForm;
 public class SelectConverterFormValidator implements Validator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SelectConverterFormValidator.class);
-//    private final ConverterService converterService;
-//
-//    @Inject
-//    public SelectConverterFormValidator(ConverterService converterService) {
-//        this.converterService = converterService;
-//    }
+
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -27,14 +22,15 @@ public class SelectConverterFormValidator implements Validator {
     public void validate(Object target, Errors errors) {
         LOGGER.debug("Validating {}", target);
         SelectConverterForm form = (SelectConverterForm) target;
-        //  validateFileSize(errors, form);
+        validateFileSize(errors, form);
 
     }
 
     private void validateFileSize(Errors errors, SelectConverterForm form) {
-        /*if (!form.getPassword().equals(form.getPasswordRepeated())) {
+        if (form.getSourceFormat().equals("pif"))
             errors.reject("password.no_match", "Passwords do not match");
-        }*/
+
+
     }
 }
 

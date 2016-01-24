@@ -17,6 +17,8 @@ import pl.pogorzelski.webconverter.domain.Converter;
 import pl.pogorzelski.webconverter.domain.dto.NewConverterForm;
 import pl.pogorzelski.webconverter.domain.validator.NewConverterFormValidator;
 import pl.pogorzelski.webconverter.service.ConverterService;
+import pl.pogorzelski.webconverter.util.Constants;
+import pl.pogorzelski.webconverter.util.ConverterUtils;
 
 import javax.inject.Inject;
 import javax.tools.JavaCompiler;
@@ -24,19 +26,14 @@ import javax.tools.ToolProvider;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Created by kuba on 12/15/15.
+ * @author kuba
  */
 @Controller
 public class NewConverterController {
     private static final Logger LOG = LoggerFactory.getLogger(NewConverterController.class);
-    private static final String PLUGIN_DIR = "plugins";
-    private static final File ROOT_FOLDER = new File(PLUGIN_DIR);
 
 
     @Inject
@@ -46,51 +43,16 @@ public class NewConverterController {
     @Inject
     private ConverterService converterService;
 
-    private static boolean validConverter(Converter c) {
-        Class<?> cls = loadClass(c);
-
-        if (cls != null && BaseConverter.class.isAssignableFrom(cls)) {
-            return true;
-        }
-        return false;
-    }
-
-    public static BaseConverter getConverter(Converter c) {
-        Class<?> cls = loadClass(c);
-
-        if (cls != null && BaseConverter.class.isAssignableFrom(cls)) {
-            try {
-                return (BaseConverter) cls.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static Class<?> loadClass(Converter converter) {
-        URLClassLoader classLoader = null;
-        try {
-            classLoader = URLClassLoader.newInstance(new URL[]{ROOT_FOLDER.toURI().toURL()});
-        } catch (MalformedURLException e) {
-            LOG.error(e.getMessage());
-        }
-        try {
-            Class<?> cls = Class.forName(converter.getPackageName() + "." + converter.getClassName(), false,
-                    classLoader);
-            return cls;
-        } catch (ClassNotFoundException e) {
-            LOG.error(e.getMessage());
-        }
-
-        return null;
-    }
 
     @InitBinder("form")
     public void initBinder(WebDataBinder binder) {
         binder.addValidators(newConverterFormValidator);
+    }
+
+
+    @RequestMapping(value = "/newconverter", method = RequestMethod.GET)
+    public ModelAndView renderConvert() {
+        return new ModelAndView("newconverter", "form", new NewConverterForm());
     }
 
     @RequestMapping(value = "/newconverter", method = RequestMethod.POST)
@@ -102,56 +64,60 @@ public class NewConverterController {
         }
 
         String source = form.getSourceCode();
+        String className = getClassName(source);
+        String packageName = getPackageName(source);
+        if (className != null || packageName != null) {
+            Converter c = new Converter();
+            c.setSourceCode(source);
+            c.setClassName(className);
+            c.setPackageName(packageName);
+            c.setSourceFormat(form.getSourceFormat());
+            c.setTargetFormat(form.getTargetFormat());
 
-        Converter c = new Converter();
-        c.setSourceCode(source);
-        c.setClassName(getClassName(source));
-        c.setPackageName(getPackageName(source));
-        c.setSourceFormat(form.getSourceFormat());
-        c.setTargetFormat(form.getTargetFormat());
-
-        storeClassFile(c);
-
-        if (validConverter(c)) {
-            converterService.create(c);
+            try {
+                storeClassFile(c);
+                if (ConverterUtils.validConverter(c)) {
+                    converterService.create(c);
+                    LOG.info("Success adding converter");
+                    return "redirect:/convert";
+                }
+            } catch (CompilationException e) {
+                LOG.error(e.getMessage());
+                bindingResult.rejectValue("sourceCode","error.sourceCode", "Error in source");
+            }
         }
-
-        // ok, redirect
-        return "redirect:/test";
+        bindingResult.rejectValue("sourceCode","wrong.sourceCode", "Wrong/Error in source");
+        return "newconverter";
     }
+
 
     private String getPackageName(String source) {
         String tmp = StringUtils.substringAfter(source, "package ");
-        return tmp.substring(0, tmp.indexOf(";"));
+        if (StringUtils.isNotBlank(tmp))
+            return tmp.substring(0, tmp.indexOf(";"));
+        return null;
     }
 
     private String getClassName(String source) {
         String tmp = StringUtils.substringAfter(source, "class ");
-        return tmp.substring(0, tmp.indexOf(" "));
+        if (StringUtils.isNotBlank(tmp))
+            return tmp.substring(0, tmp.indexOf(" "));
+        return null;
     }
 
-    private void storeClassFile(Converter form) {
+    private void storeClassFile(Converter form) throws CompilationException {
         String packageNameSlashes = form.getPackageName().replaceAll("\\.", "/");
 
-        File sourceFile = new File(ROOT_FOLDER, packageNameSlashes + "/" + form.getClassName() + ".java");
+        File sourceFile = new File(Constants.ROOT_FOLDER, packageNameSlashes + "/" + form.getClassName() + ".java");
         sourceFile.getParentFile().mkdirs();
         try {
             Files.write(form.getSourceCode(), sourceFile, StandardCharsets.UTF_8);
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
-        compileConverterFile(sourceFile);
+        ConverterUtils.compileConverterFile(sourceFile);
     }
 
-    private void compileConverterFile(File sourceFile) {
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        compiler.run(null, null, null, sourceFile.getPath());
-    }
-
-    @RequestMapping(value = "/newconverter", method = RequestMethod.GET)
-    public ModelAndView renderConvert() {
-        return new ModelAndView("newconverter", "form", new NewConverterForm());
-    }
 
 }
 

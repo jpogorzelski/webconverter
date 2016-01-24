@@ -3,6 +3,7 @@ package pl.pogorzelski.webconverter.service.file;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.pogorzelski.webconverter.domain.File;
 import pl.pogorzelski.webconverter.domain.dto.ConvertForm;
 import pl.pogorzelski.webconverter.repository.FileRepository;
@@ -16,6 +17,7 @@ import java.util.Optional;
  * Created by kuba on 11/23/15.
  */
 @Service
+@Transactional
 public class FileServiceImpl implements FileService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);

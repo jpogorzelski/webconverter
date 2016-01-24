@@ -10,13 +10,13 @@ import pl.pogorzelski.webconverter.service.user.UserService;
 import javax.inject.Inject;
 
 @Controller
-public class UsersController {
+public class ListUsersController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UsersController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ListUsersController.class);
     private final UserService userService;
 
     @Inject
-    public UsersController(UserService userService) {
+    public ListUsersController(UserService userService) {
         this.userService = userService;
     }
 

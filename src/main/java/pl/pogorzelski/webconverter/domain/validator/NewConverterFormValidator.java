@@ -29,7 +29,7 @@ public class NewConverterFormValidator implements Validator {
 
     private void validateTest(Errors errors, NewConverterForm form) {
         if (form.getSourceFormat().trim().equals("pif")) {
-            errors.reject("wrong.source.format", "Nieprawidlowy format zrodlowy");
+            errors.rejectValue("sourceFormat","wrong.source.format", "Nieprawidlowy format zrodlowy");
         }
     }
 
