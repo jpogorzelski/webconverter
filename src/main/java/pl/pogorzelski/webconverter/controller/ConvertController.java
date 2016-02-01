@@ -1,6 +1,5 @@
 package pl.pogorzelski.webconverter.controller;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.slf4j.Logger;
@@ -8,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,9 +16,11 @@ import pl.pogorzelski.webconverter.domain.dto.SelectConverterForm;
 import pl.pogorzelski.webconverter.domain.validator.SelectConverterFormValidator;
 import pl.pogorzelski.webconverter.service.ConverterService;
 import pl.pogorzelski.webconverter.util.ConverterUtils;
+import pl.pogorzelski.webconverter.util.MailSendService;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +41,9 @@ public class ConvertController {
     @Inject
     private ConverterService converterService;
 
+    @Inject
+    private MailSendService mailSendService;
+
     @InitBinder("selectConverterForm")
     public void initBinder(WebDataBinder binder) {
         binder.addValidators(selectConverterFormValidator);
@@ -54,7 +57,6 @@ public class ConvertController {
         LOG.debug("convert view. added selectConverterForm to model and returning convert page");
         return "convert";
     }
-
 
 
     @RequestMapping(value = "/convert", method = RequestMethod.POST)
@@ -82,9 +84,15 @@ public class ConvertController {
             boolean prepareFilesAndDirs = prepareFilesAndDirs(name, destinationDir);
             if (prepareFilesAndDirs) {
                 File sourceFile = new File(name);
-               // File outputFile = convertFile(sourceFile);
+                // File outputFile = convertFile(sourceFile);
+                assert bc != null;
                 File outputFile = bc.convert(sourceFile);
                 serveFile(req, res, outputFile.getAbsolutePath());
+                try {
+                    mailSendService.send(outputFile.getName());
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
                 LOG.debug("successful conversion, class: " + bc.getClass().toString());
             }
         } else {
@@ -145,13 +153,12 @@ public class ConvertController {
         LOG.info("appPath = " + appPath);
 
         // construct the complete absolute path of the file
-        String fullPath = finalOutName;
-        LOG.info("full: " + fullPath);
-        File downloadFile = new File(fullPath);
+        LOG.info("full: " + finalOutName);
+        File downloadFile = new File(finalOutName);
         FileInputStream inputStream = new FileInputStream(downloadFile);
 
         // get MIME type of the file
-        String mimeType = context.getMimeType(fullPath);
+        String mimeType = context.getMimeType(finalOutName);
         if (mimeType == null) {
             // set to binary type if MIME mapping not found
             mimeType = "application/octet-stream";
@@ -171,7 +178,7 @@ public class ConvertController {
         OutputStream outStream = res.getOutputStream();
 
         byte[] buffer = new byte[4096];
-        int bytesRead = -1;
+        int bytesRead;
 
         // write bytes read from the input stream into the output stream
         while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -186,6 +193,7 @@ public class ConvertController {
             throws IOException {
 
         PDDocument document = PDDocument.load(sourceFile);
+        @SuppressWarnings("unchecked")
         List<PDPage> list = document.getDocumentCatalog().getAllPages();
         PDPage page = list.get(0);
         LOG.info("Total files to be converted -> {}", list.size());
