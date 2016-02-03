@@ -8,5 +8,5 @@ import java.io.IOException;
  */
 public interface BaseConverter {
 
-    File convert(File sourceFile) throws IOException;
+    void convert(File source, File target) throws IOException;
 }

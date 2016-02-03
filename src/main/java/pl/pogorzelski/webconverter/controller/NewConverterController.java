@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import pl.pogorzelski.webconverter.convert.BaseConverter;
 import pl.pogorzelski.webconverter.domain.Converter;
 import pl.pogorzelski.webconverter.domain.dto.NewConverterForm;
 import pl.pogorzelski.webconverter.domain.validator.NewConverterFormValidator;
@@ -21,8 +20,6 @@ import pl.pogorzelski.webconverter.util.Constants;
 import pl.pogorzelski.webconverter.util.ConverterUtils;
 
 import javax.inject.Inject;
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 @Controller
 public class NewConverterController {
     private static final Logger LOG = LoggerFactory.getLogger(NewConverterController.class);
+    public static final String JAVA = ".java";
 
 
     @Inject
@@ -58,7 +56,7 @@ public class NewConverterController {
     @RequestMapping(value = "/newconverter", method = RequestMethod.POST)
     public String registerNewConverter(
             @Valid @ModelAttribute("form") NewConverterForm form, BindingResult bindingResult) {
-        LOG.debug("Processing user create form={}, bindingResult={}", form, bindingResult);
+        LOG.debug("Processing mew converter form={}, bindingResult={}", form, bindingResult);
         if (bindingResult.hasErrors()) {
             return "newconverter";
         }
@@ -83,10 +81,10 @@ public class NewConverterController {
                 }
             } catch (CompilationException e) {
                 LOG.error(e.getMessage());
-                bindingResult.rejectValue("sourceCode","error.sourceCode", "Error in source");
+                bindingResult.rejectValue("sourceCode", "error.sourceCode", "Error in source");
             }
         }
-        bindingResult.rejectValue("sourceCode","wrong.sourceCode", "Wrong/Error in source");
+        bindingResult.rejectValue("sourceCode", "wrong.sourceCode", "Wrong/Error in source");
         return "newconverter";
     }
 
@@ -108,7 +106,8 @@ public class NewConverterController {
     private void storeClassFile(Converter form) throws CompilationException {
         String packageNameSlashes = form.getPackageName().replaceAll("\\.", "/");
 
-        File sourceFile = new File(Constants.ROOT_FOLDER, packageNameSlashes + "/" + form.getClassName() + ".java");
+        File sourceFile = new File(Constants.ROOT_FOLDER, packageNameSlashes + File.separator + form.getClassName()
+                 + JAVA);
         sourceFile.getParentFile().mkdirs();
         try {
             Files.write(form.getSourceCode(), sourceFile, StandardCharsets.UTF_8);

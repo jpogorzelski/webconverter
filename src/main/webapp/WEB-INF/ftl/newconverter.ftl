@@ -23,14 +23,14 @@
     <input type="submit" class="btn btn-success"/>
 </form>
 
-<#--<@spring.bind "form" />
+<@spring.bind "form" />
 <#if spring.status.error>
 <ul>
     <#list spring.status.errorMessages as error>
         <li>${error}</li>
     </#list>
 </ul>
-</#if>-->
+</#if>
 
 
 <#include "footer.ftl" />

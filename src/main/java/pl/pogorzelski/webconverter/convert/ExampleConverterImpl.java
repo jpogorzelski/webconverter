@@ -1,7 +1,7 @@
 package pl.pogorzelski.webconverter.convert;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.File;
 
 /**
  * Created by kuba on 12/20/15.
@@ -9,13 +9,14 @@ import java.io.IOException;
 public class ExampleConverterImpl implements BaseConverter {
 
     @Override
-    public File convert(File sourceFile) throws IOException {
-        return null;
+    public void convert(File source, File target) throws IOException {
     }
 }
 
 
 /*
+
+
 package pl.pogorzelski.webconverter.convert;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -27,30 +28,31 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public class MyExampleConverterImpl implements BaseConverter {
     private static final Logger LOG = LoggerFactory.getLogger(MyExampleConverterImpl.class);
 
     @Override
-    public File convert(File sourceFile) throws IOException {
-        PDDocument document = PDDocument.load(sourceFile);
+    public void convert(File source, File target) throws IOException {
+        PDDocument document = PDDocument.load(source);
         List<PDPage> list = document.getDocumentCatalog().getAllPages();
         PDPage page = list.get(0);
-        LOG.info("Total files to be converted -> {}", list.size());
-
-        String fileName = sourceFile.getName().replace(".pdf", "");
+        String fileName = source.getName().replace(".pdf", "");
         int pageNumber = 1;
         BufferedImage image = page.convertToImage();
-        File outputFile = new File(System.getProperty("java.io.tmpdir") + File.separator + fileName + "_" +
-                pageNumber + ".png");
 
-        LOG.info("Image Created -> {}", outputFile.getName());
-        ImageIO.write(image, "png", outputFile);
+        ImageIO.write(image, "png", target);
         document.close();
-
-        return outputFile;
     }
 }
 
+
+
+
+
  */
+
+

@@ -5,7 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import pl.pogorzelski.webconverter.domain.Converter;
 import pl.pogorzelski.webconverter.domain.dto.NewConverterForm;
+import pl.pogorzelski.webconverter.service.ConverterService;
+
+import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Created by kuba on 12/15/15.
@@ -14,6 +19,9 @@ import pl.pogorzelski.webconverter.domain.dto.NewConverterForm;
 public class NewConverterFormValidator implements Validator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewConverterFormValidator.class);
+
+    @Inject
+    ConverterService converterService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -28,8 +36,9 @@ public class NewConverterFormValidator implements Validator {
     }
 
     private void validateTest(Errors errors, NewConverterForm form) {
-        if (form.getSourceFormat().trim().equals("pif")) {
-            errors.rejectValue("sourceFormat","wrong.source.format", "Nieprawidlowy format zrodlowy");
+        Optional<Converter> converter = converterService.getOneBySourceFormatAndTargetFormat(form.getSourceFormat(), form.getTargetFormat());
+        if (converter.isPresent()){
+            errors.reject("error.converter.exists", "Taki konwerter już istnieje!");
         }
     }
 
