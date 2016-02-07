@@ -25,10 +25,51 @@
                value="${spring.stringStatusValue}" class="form-control ${class}" required="${required}">
         <#if error?has_content>
             <span class="help-inline">
-                ${spring.status.errorMessages?first!}
+            ${spring.status.errorMessages?first!}
             </span>
         </#if>
         <#nested>
     </div>
 </div>
+</#macro>
+
+
+<#macro insertHeader name>
+<div class="page-header">
+    <h2><@spring.message "${name}.header" /></h2>
+</div>
+</#macro>
+
+
+
+<#macro insertTasks name header="header">
+    <#if name?? && name?size gt 0 >
+    <h4><@spring.message "tasks.${header}" /></h4>
+    <table class="table table-stripped">
+        <thead>
+        <tr>
+            <th><@spring.message "tasks.converter" /></th>
+            <th><@spring.message "tasks.src" /></th>
+            <th><@spring.message "tasks.target" /></th>
+            <th><@spring.message "tasks.state" /></th>
+            <#if currentUser.role == "ADMIN">
+                <th><@spring.message "tasks.user" /></th>
+            </#if>
+        </tr>
+        </thead>
+        <tbody>
+            <#list name as t>
+            <tr>
+                <td>${t.converter}</td>
+                <td>${t.source.name}</td>
+                <td>${t.target.name}</td>
+                <td>${t.state}</td>
+                <#if currentUser.role == "ADMIN">
+                    <td>${t.user.email}</td>
+                </#if>
+            </tr>
+            </#list>
+        </tbody>
+    </table>
+    </#if>
 </#macro>

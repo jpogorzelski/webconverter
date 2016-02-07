@@ -30,10 +30,8 @@ import java.nio.charset.StandardCharsets;
  */
 @Controller
 public class NewConverterController {
-    private static final Logger LOG = LoggerFactory.getLogger(NewConverterController.class);
     public static final String JAVA = ".java";
-
-
+    private static final Logger LOG = LoggerFactory.getLogger(NewConverterController.class);
     @Inject
     private NewConverterFormValidator newConverterFormValidator;
 
@@ -56,7 +54,6 @@ public class NewConverterController {
     @RequestMapping(value = "/newconverter", method = RequestMethod.POST)
     public String registerNewConverter(
             @Valid @ModelAttribute("form") NewConverterForm form, BindingResult bindingResult) {
-        LOG.debug("Processing mew converter form={}, bindingResult={}", form, bindingResult);
         if (bindingResult.hasErrors()) {
             return "newconverter";
         }
@@ -80,7 +77,7 @@ public class NewConverterController {
                     return "redirect:/convert";
                 }
             } catch (CompilationException e) {
-                LOG.error(e.getMessage());
+                LOG.error(e.toString());
                 bindingResult.rejectValue("sourceCode", "error.sourceCode", "Error in source");
             }
         }
@@ -107,7 +104,7 @@ public class NewConverterController {
         String packageNameSlashes = form.getPackageName().replaceAll("\\.", "/");
 
         File sourceFile = new File(Constants.ROOT_FOLDER, packageNameSlashes + File.separator + form.getClassName()
-                 + JAVA);
+                + JAVA);
         sourceFile.getParentFile().mkdirs();
         try {
             Files.write(form.getSourceCode(), sourceFile, StandardCharsets.UTF_8);

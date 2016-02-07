@@ -1,57 +1,40 @@
 package pl.pogorzelski.webconverter.queue;
 
 import org.springframework.stereotype.Component;
-import pl.pogorzelski.webconverter.util.MailSendService;
 
-import javax.inject.Inject;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Kuba
  */
-@Component
+@Component(value = "myExecutorService")
 public class MyExecutorService {
-    private LinkedBlockingQueue<Runnable> converterQueue = new LinkedBlockingQueue<>();
-    private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 10,0L, TimeUnit.MILLISECONDS, converterQueue);
 
-    @Inject
-    MailSendService mailSendService;
+    protected static List<ConvertTask> finishedTasks = new ArrayList<>();
+    private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new
+            LinkedBlockingQueue<>());
 
     public void add(ConvertTask task) throws InterruptedException, ExecutionException {
-        /*if (converterQueue.isEmpty()) {
-            converterQueue.put(task);
-            execute();
-        } else {
-            converterQueue.put(task);
+
+        executorService.submit(task);
+
+        /*for (int i = 0; i < 30; i++) {
+            executorService.submit(new ConvertTask(task));
         }*/
-        executorService.submit(task);
-        executorService.submit(task);
-        executorService.submit(task);
-
-        for (Runnable r : executorService.getQueue()) {
-            System.out.println("## :: " + JobDiscover.findRealTask(r).toString() );
-        }
-
-
     }
 
-    /*public void execute() throws InterruptedException, ExecutionException {
+    public ThreadPoolExecutor getExecutorService() {
+        return executorService;
+    }
 
-        while (!converterQueue.isEmpty()) {
+    public List<ConvertTask> getFinishedTasks() {
+        return finishedTasks;
+    }
 
 
-            Future<String> statusFuture = executorService.submit(task);
-            String status = statusFuture.get();
-            if ("success".equals(status)){
-                System.out.print("## " + status + " :: "+ task.getTarget().getName());
-                try {
-                    mailSendService.send(task.getTarget().getName());
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
-                converterQueue.take();
-            }
-        }
-      //  executorService.shutdown();
-    }*/
 }

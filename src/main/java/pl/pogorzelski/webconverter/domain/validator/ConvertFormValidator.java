@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import pl.pogorzelski.webconverter.domain.dto.ConvertForm;
-import pl.pogorzelski.webconverter.service.file.FileService;
+import pl.pogorzelski.webconverter.service.FileService;
 
 import javax.inject.Inject;
 

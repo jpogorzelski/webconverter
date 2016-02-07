@@ -1,4 +1,4 @@
-package pl.pogorzelski.webconverter.service.currentuser;
+package pl.pogorzelski.webconverter.service;
 
 import pl.pogorzelski.webconverter.domain.dto.CurrentUser;
 

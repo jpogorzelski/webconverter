@@ -5,8 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import pl.pogorzelski.webconverter.domain.dto.RegisterForm;
 import pl.pogorzelski.webconverter.domain.dto.UserCreateForm;
-import pl.pogorzelski.webconverter.service.user.UserService;
+import pl.pogorzelski.webconverter.service.UserService;
 
 import javax.inject.Inject;
 
@@ -23,24 +24,24 @@ public class UserCreateFormValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.equals(UserCreateForm.class);
+        return clazz.equals(UserCreateForm.class) || clazz.equals(RegisterForm.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
         LOGGER.debug("Validating {}", target);
-        UserCreateForm form = (UserCreateForm) target;
+        RegisterForm form = (RegisterForm) target;
         validatePasswords(errors, form);
         validateEmail(errors, form);
     }
 
-    private void validatePasswords(Errors errors, UserCreateForm form) {
+    private void validatePasswords(Errors errors, RegisterForm form) {
         if (!form.getPassword().equals(form.getPasswordRepeated())) {
             errors.reject("password.no_match", "Passwords do not match");
         }
     }
 
-    private void validateEmail(Errors errors, UserCreateForm form) {
+    private void validateEmail(Errors errors, RegisterForm form) {
         if (userService.getUserByEmail(form.getEmail()).isPresent()) {
             errors.reject("email.exists", "User with this email already exists");
         }

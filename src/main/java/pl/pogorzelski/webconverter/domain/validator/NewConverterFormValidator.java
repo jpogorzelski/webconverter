@@ -36,8 +36,9 @@ public class NewConverterFormValidator implements Validator {
     }
 
     private void validateTest(Errors errors, NewConverterForm form) {
-        Optional<Converter> converter = converterService.getOneBySourceFormatAndTargetFormat(form.getSourceFormat(), form.getTargetFormat());
-        if (converter.isPresent()){
+        Optional<Converter> converter = converterService.getOneBySourceFormatAndTargetFormat(form.getSourceFormat(),
+                form.getTargetFormat());
+        if (converter.isPresent()) {
             errors.reject("error.converter.exists", "Taki konwerter już istnieje!");
         }
     }

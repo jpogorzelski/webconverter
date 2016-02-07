@@ -16,24 +16,27 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "phone", nullable = false, unique = true)
+    @Column(name = "phone")
     private String phone;
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
+    private int conversionCountLimit = 100;
+
+    private int currentConversionCount = 0;
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "owner", targetEntity = File.class, cascade = CascadeType.ALL)
-    private List<File> files = new ArrayList<>();
+    @OneToMany(mappedBy = "owner", targetEntity = FileEntry.class, cascade = CascadeType.ALL)
+    private List<FileEntry> files = new ArrayList<>();
 
-    public List<File> getFiles() {
+    public List<FileEntry> getFiles() {
         return files;
     }
 
-    public void setFiles(List<File> files) {
+    public void setFiles(List<FileEntry> files) {
         this.files = files;
     }
 
@@ -73,6 +76,26 @@ public class User {
         this.phone = phone;
     }
 
+    public int getConversionCountLimit() {
+        return conversionCountLimit;
+    }
+
+    public void setConversionCountLimit(int conversionCountLimit) {
+        this.conversionCountLimit = conversionCountLimit;
+    }
+
+    public int getCurrentConversionCount() {
+        return currentConversionCount;
+    }
+
+    public void setCurrentConversionCount(int currentConversionCount) {
+        this.currentConversionCount = currentConversionCount;
+    }
+
+    public void incrementCurrentConversionCount() {
+        this.currentConversionCount++;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,7 +131,7 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
                 ", role=" + role +
-               // ", files=" + files +
+                // ", files=" + files +
                 '}';
     }
 }

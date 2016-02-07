@@ -1,10 +1,11 @@
-package pl.pogorzelski.webconverter.service.currentuser;
+package pl.pogorzelski.webconverter.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.pogorzelski.webconverter.domain.Role;
 import pl.pogorzelski.webconverter.domain.dto.CurrentUser;
+import pl.pogorzelski.webconverter.service.CurrentUserService;
 
 @Service
 public class CurrentUserServiceImpl implements CurrentUserService {
@@ -14,8 +15,12 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     @Override
     public boolean canAccessUser(CurrentUser currentUser, Long userId) {
         LOGGER.debug("Checking if user={} has access to user={}", currentUser, userId);
-        return currentUser != null
-                && (currentUser.getRole() == Role.ADMIN || currentUser.getId().equals(userId));
+        if (currentUser != null) {
+            if ((currentUser.getRole() == Role.ADMIN) || currentUser.getId().equals(userId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

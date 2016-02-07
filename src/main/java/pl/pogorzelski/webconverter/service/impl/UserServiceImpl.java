@@ -1,18 +1,23 @@
-package pl.pogorzelski.webconverter.service.user;
+package pl.pogorzelski.webconverter.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pl.pogorzelski.webconverter.domain.Role;
 import pl.pogorzelski.webconverter.domain.User;
+import pl.pogorzelski.webconverter.domain.dto.RegisterForm;
 import pl.pogorzelski.webconverter.domain.dto.UserCreateForm;
 import pl.pogorzelski.webconverter.repository.UserRepository;
+import pl.pogorzelski.webconverter.service.UserService;
 
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -43,6 +48,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User create(RegisterForm form) {
+        User user = new User();
+        user.setEmail(form.getEmail());
+        user.setPasswordHash(new BCryptPasswordEncoder().encode(form.getPassword()));
+        user.setRole(Role.USER);
+        return userRepository.save(user);
+    }
+
+    @Override
     public User create(UserCreateForm form) {
         User user = new User();
         user.setEmail(form.getEmail());
@@ -51,4 +65,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public void incrementCurrentConversionCount(User user) {
+        user.incrementCurrentConversionCount();
+        userRepository.save(user);
+    }
 }

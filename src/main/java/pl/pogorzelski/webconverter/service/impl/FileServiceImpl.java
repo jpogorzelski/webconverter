@@ -1,16 +1,15 @@
-package pl.pogorzelski.webconverter.service.file;
+package pl.pogorzelski.webconverter.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.pogorzelski.webconverter.domain.File;
-import pl.pogorzelski.webconverter.domain.dto.ConvertForm;
+import pl.pogorzelski.webconverter.domain.FileEntry;
 import pl.pogorzelski.webconverter.repository.FileRepository;
-import pl.pogorzelski.webconverter.service.user.UserServiceImpl;
+import pl.pogorzelski.webconverter.service.FileService;
 
 import javax.inject.Inject;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,24 +25,23 @@ public class FileServiceImpl implements FileService {
     private FileRepository fileRepository;
 
     @Override
-    public Optional<File> getFileById(long id) {
+    public Optional<FileEntry> getFileById(long id) {
         return Optional.ofNullable(fileRepository.findOne(id));
     }
 
     @Override
-    public Optional<File> getFileByName(String name) {
+    public Optional<FileEntry> getFileByName(String name) {
         return fileRepository.findOneByName(name);
     }
 
     @Override
-    public Collection<File> getAllFiles() {
+    public List<FileEntry> getAllFiles() {
         return fileRepository.findAll();
     }
 
     @Override
-    public File create(ConvertForm form) {
-        File file = new File();
-        file.setName(form.getName());
-        return fileRepository.save(file);
+    public void save(FileEntry file) {
+        fileRepository.save(file);
     }
+
 }

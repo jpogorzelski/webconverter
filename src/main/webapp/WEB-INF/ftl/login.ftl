@@ -1,28 +1,26 @@
 <#include "head.ftl" />
 <#-- @ftlvariable name="error" type="java.util.Optional<String>" -->
 
-<h1>Log in</h1>
-
-<p>You can use: demo / demo</p>
-
-<form role="form" action="/login" method="post">
-
-    <div class="form-group">
-        <label for="email">Email address</label>
-        <input class="form-control" name="email" id="email" required autofocus/>
-    </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input class="form-control" type="password" name="password" id="password" required/>
-    </div>
-    <div class="form-group">
-        <label for="remember-me">Remember me</label>
-        <input type="checkbox" name="remember-me" id="remember-me"/>
-    </div>
-    <button type="submit" class="btn btn-default">Sign in</button>
-</form>
+<@f.insertHeader "login"/>
 
 <#if error.isPresent()>
-<p>The email or password you have entered is invalid, try again.</p>
+<p class="alert alert-danger">The email or password you have entered is invalid, try again.</p>
 </#if>
+<p>You can use: admin@localhost / demo</p>
+
+<form role="form" class="form-signin" action="/login" method="post">
+    <label for="email" class="sr-only">Email address</label>
+    <input type="email" class="form-control" name="email" id="email" required autofocus placeholder="Email address">
+
+    <label for="password" class="sr-only">Password</label>
+    <input class="form-control" type="password" name="password" id="password" required placeholder="Password">
+
+    <label for="remember-me">Remember me</label>
+    <input type="checkbox" name="remember-me" id="remember-me"/>
+
+    <button type="submit" class="btn btn-lg btn-primary btn-block">Sign in</button>
+</form>
+
+
+
 <#include "footer.ftl" />

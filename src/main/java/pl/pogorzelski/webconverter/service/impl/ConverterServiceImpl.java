@@ -1,4 +1,4 @@
-package pl.pogorzelski.webconverter.service;
+package pl.pogorzelski.webconverter.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.pogorzelski.webconverter.domain.Converter;
 import pl.pogorzelski.webconverter.domain.dto.NewConverterForm;
 import pl.pogorzelski.webconverter.repository.ConverterRepository;
+import pl.pogorzelski.webconverter.service.ConverterService;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -22,12 +23,9 @@ public class ConverterServiceImpl implements ConverterService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConverterServiceImpl.class);
 
 
-    private final ConverterRepository converterRepository;
-
     @Inject
-    public ConverterServiceImpl(ConverterRepository converterRepository) {
-        this.converterRepository = converterRepository;
-    }
+    private ConverterRepository converterRepository;
+
 
     @Override
     public Collection<String> getAllConverters() {
@@ -67,6 +65,5 @@ public class ConverterServiceImpl implements ConverterService {
         return converterRepository.save(converter);
 
     }
-
 
 }

@@ -13,7 +13,7 @@ public class Converter {
 
     private String targetFormat = "";
     @Lob
-    @Column(name="sourceCode", length=2048)
+    @Column(name = "sourceCode", length = 2048)
     private String sourceCode = "";
 
     private String className = "";
@@ -80,8 +80,7 @@ public class Converter {
 
     @Override
     public String toString() {
-        return "Converter [id=" + id + ", sourceFormat=" + sourceFormat + ", targetFormat=" + targetFormat
-                + ", sourceCode=" + sourceCode + "]";
+        return "Converter [ " + sourceFormat + " => " + targetFormat + " ]";
     }
 
 }

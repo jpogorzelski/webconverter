@@ -49,7 +49,8 @@ public class OldConvertController {
 
     @ResponseBody
     public void handleFileUpload(@RequestParam("name") String name,
-                                 @RequestParam("file") MultipartFile file, HttpServletRequest req, HttpServletResponse res) {
+                                 @RequestParam("file") MultipartFile file, HttpServletRequest req,
+                                 HttpServletResponse res) {
         if (!file.isEmpty()) {
             try {
 
@@ -60,8 +61,10 @@ public class OldConvertController {
                 stream.close();
                 String finalOutName = "";
                 try {
-                    String sourceDir = name;//"C:/Documents/04-Request-Headers.pdf"; // Pdf files are read from this folder
-                    String destinationDir = name + "_img";//"C:/Documents/Converted_PdfFiles_to_Image/"; // converted images from pdf document are saved here
+                    String sourceDir = name;//"C:/Documents/04-Request-Headers.pdf"; // Pdf files are read from this
+                    // folder
+                    String destinationDir = name + "_img";//"C:/Documents/Converted_PdfFiles_to_Image/"; // converted
+                    // images from pdf document are saved here
 
                     File sourceFile = new File(sourceDir);
                     File destinationFile = new File(destinationDir);
@@ -91,7 +94,7 @@ public class OldConvertController {
                         System.out.println("Converted Images are saved at -> " + destinationFile.getAbsolutePath());
 
                     } else {
-                        System.err.println(sourceFile.getName() + " File not exists");
+                        System.err.println(sourceFile.getName() + " FileEntry not exists");
                     }
 
                 } catch (Exception e) {

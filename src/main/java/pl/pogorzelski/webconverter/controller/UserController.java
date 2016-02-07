@@ -9,9 +9,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import pl.pogorzelski.webconverter.domain.User;
 import pl.pogorzelski.webconverter.domain.dto.UserCreateForm;
 import pl.pogorzelski.webconverter.domain.validator.UserCreateFormValidator;
-import pl.pogorzelski.webconverter.service.user.UserService;
+import pl.pogorzelski.webconverter.service.UserService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -39,8 +40,9 @@ public class UserController {
     @RequestMapping("/user/{id}")
     public ModelAndView getUserPage(@PathVariable Long id) {
         LOGGER.debug("Getting user page for user={}", id);
-        return new ModelAndView("user", "user", userService.getUserById(id)
-                .orElseThrow(() -> new NoSuchElementException(String.format("User=%s not found", id))));
+        User modelObject = userService.getUserById(id)
+                .orElseThrow(() -> new NoSuchElementException(String.format("User=%s not found", id)));
+        return new ModelAndView("user", "user", modelObject);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
