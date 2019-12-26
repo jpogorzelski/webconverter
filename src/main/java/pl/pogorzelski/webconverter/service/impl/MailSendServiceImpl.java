@@ -1,5 +1,6 @@
 package pl.pogorzelski.webconverter.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -55,6 +56,6 @@ public class MailSendServiceImpl implements MailSendService {
         subject = subject.replace("{file}", fileEntry.getName());
         body = body.replace("{user}", user.getEmail())
                 .replace("{file}", fileEntry.getName())
-                .replace("{download}", downloadURL + fileEntry.getId());
+                .replace("{download}", StringUtils.join(downloadURL, user.getId(), "/", fileEntry.getMd5Hash()));
     }
 }

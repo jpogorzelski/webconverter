@@ -14,6 +14,8 @@ public interface FileService {
 
     Optional<FileEntry> getFileByName(String name);
 
+    Optional<FileEntry> getFileByMd5Hash(String name);
+
     List<FileEntry> getAllFiles();
 
     void save(FileEntry file);

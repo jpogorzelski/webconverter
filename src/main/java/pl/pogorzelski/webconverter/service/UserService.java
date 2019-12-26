@@ -19,5 +19,7 @@ public interface UserService {
 
     User create(UserCreateForm form);
 
+    void save(User user);
+
     void incrementCurrentConversionCount(User user);
 }

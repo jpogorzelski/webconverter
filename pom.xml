@@ -36,6 +36,11 @@
             <version>4.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
 
         <dependency>
             <groupId>javax.inject</groupId>
@@ -55,6 +60,12 @@
             <version>1.5.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio-java-sdk</artifactId>
+            <version>5.10.0</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Spring Boot -->
         <dependency>

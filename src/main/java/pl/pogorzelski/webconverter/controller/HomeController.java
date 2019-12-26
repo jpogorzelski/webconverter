@@ -16,4 +16,10 @@ public class HomeController {
         return "home";
     }
 
+    @RequestMapping("/403")
+    public String get403() {
+        LOGGER.info("GOT 403...");
+        return "403";
+    }
+
 }

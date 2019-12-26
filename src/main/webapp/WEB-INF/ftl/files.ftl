@@ -13,7 +13,7 @@
     <#list files as file>
     <tr>
         <td>${file.name}</td>
-        <td><a href="/download/${file.id}">Download ${file.id}</a></td>
+        <td><a href="/download/${file.md5Hash}">Download ${file.id}</a></td>
     </tr>
     </#list>
     </tbody>

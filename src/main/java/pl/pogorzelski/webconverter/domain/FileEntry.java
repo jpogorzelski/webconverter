@@ -20,6 +20,7 @@ public class FileEntry {
     @ManyToOne
     private User owner;
 
+    private String md5Hash;
     @Lob
     private File file;
 
@@ -61,6 +62,14 @@ public class FileEntry {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getMd5Hash() {
+        return md5Hash;
+    }
+
+    public void setMd5Hash(String md5Hash) {
+        this.md5Hash = md5Hash;
     }
 
     @Override

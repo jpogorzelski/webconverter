@@ -16,8 +16,8 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "phone_no")
+    private String phoneNo;
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
@@ -68,12 +68,12 @@ public class User {
         this.role = role;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNo() {
+        return phoneNo;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 
     public int getConversionCountLimit() {
@@ -105,7 +105,7 @@ public class User {
 
         if (id != null ? !id.equals(user.id) : user.id != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
+        if (phoneNo != null ? !phoneNo.equals(user.phoneNo) : user.phoneNo != null) return false;
         if (passwordHash != null ? !passwordHash.equals(user.passwordHash) : user.passwordHash != null) return false;
         if (role != user.role) return false;
         return files != null ? files.equals(user.files) : user.files == null;
@@ -116,7 +116,7 @@ public class User {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (phoneNo != null ? phoneNo.hashCode() : 0);
         result = 31 * result + (passwordHash != null ? passwordHash.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
         result = 31 * result + (files != null ? files.hashCode() : 0);
@@ -128,7 +128,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
+                ", phoneNo='" + phoneNo + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
                 ", role=" + role +
                 // ", files=" + files +

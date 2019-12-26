@@ -1,6 +1,26 @@
 <#include "head.ftl"/>
 <@f.insertHeader "newconverter"/>
 
+<script language="Javascript" type="text/javascript" src="/js/editarea_0_8_2/edit_area/edit_area_full.js"></script>
+<script language="Javascript" type="text/javascript">
+    // initialisation
+    editAreaLoader.init({
+        id: "sourceCode"	// id of the textarea to transform
+        ,start_highlight: true	// if start with highlight
+        ,allow_resize: "both"
+        ,allow_toggle: true
+        ,word_wrap: true
+        ,language: "en"
+        ,syntax: "java"
+    });
+
+</script>
+
+
+
+
+
+
 <@spring.bind "form" />
 <#if spring.status.error>
 <div class="alert alert-danger">

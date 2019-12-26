@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface FileRepository extends JpaRepository<FileEntry, Long> {
 
     Optional<FileEntry> findOneByName(String name);
+
+    Optional<FileEntry> findOneByMd5Hash(String md5Hash);
 }

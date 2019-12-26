@@ -9,7 +9,7 @@
 
 <@f.insertHeader "convert"/>
 <#if currentUser.user.currentConversionCount gte currentUser.user.conversionCountLimit>
-You have exceeded limit of free conversions.
+You have exceeded limit of free conversions. Click <a href="/unlock">here</a> to unlock the access.
 <#else>
     <@spring.bind "selectConverterForm" />
     <#if spring.status.error>

@@ -35,6 +35,11 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public Optional<FileEntry> getFileByMd5Hash(String md5Hash) {
+        return fileRepository.findOneByMd5Hash(md5Hash);
+    }
+
+    @Override
     public List<FileEntry> getAllFiles() {
         return fileRepository.findAll();
     }

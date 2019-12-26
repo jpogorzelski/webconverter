@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>EditArea - the code editor in a textarea</title>
+	<script language="Javascript" type="text/javascript" src="../edit_area/edit_area_full.js"></script>
+	<script language="Javascript" type="text/javascript">
+		// initialisation
+		editAreaLoader.init({
+			id: "example_1"	// id of the textarea to transform		
+			,start_highlight: true	// if start with highlight
+			,allow_resize: "both"
+			,allow_toggle: true
+			,word_wrap: true
+			,language: "en"
+			,syntax: "java"
+		});
+
+
+	
+	</script>
+</head>
+<body>
+<h2>EditArea examples</h2>
+<p>Retrieve EditArea on <a href='http://sourceforge.net/projects/editarea'>sourceforge</a> or on 
+	my personal <a href='http://www.cdolivet.com/index.php?page=editArea'>website</a>.
+</p>
+<form action='' method='post'>
+	<fieldset>
+		<legend>Example 1</legend>
+		<p>Test in English with php syntax, highlighted, toggle enabled, word-wrap enabled, resize enabled and default toolbar. Also offer the possibility to switch on/off the readonly mode.</p>
+		<textarea id="example_1" style="height: 350px; width: 100%;" name="test_1">
+
+		</textarea>
+
+	</fieldset>
+
+	</fieldset>
+
+	</fieldset>
+</form>
+</body>
+</html>

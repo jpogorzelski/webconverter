@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="webconverter:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="webconverter-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="webconverter:war exploded" />
+    </root>
+  </artifact>
+</component>

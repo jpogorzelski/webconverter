@@ -1,9 +1,12 @@
 package pl.pogorzelski.webconverter.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.pogorzelski.webconverter.domain.FileEntry;
+import pl.pogorzelski.webconverter.exception.FileNotFoundException;
 import pl.pogorzelski.webconverter.service.FileService;
 
 import javax.inject.Inject;
@@ -14,7 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.NoSuchElementException;
+
 
 /**
  * @author Kuba
@@ -26,16 +29,20 @@ public class DownloadController {
     @Inject
     private FileService fileService;
 
-    @RequestMapping("/{id}")
-    public void download(@PathVariable Long id, HttpServletRequest req, HttpServletResponse res) {
-        FileEntry fileEntry = fileService.getFileById(id).orElseThrow(() ->
-                new NoSuchElementException(String.format("File with id %s not found", id)));
+    private Logger logger = LoggerFactory.getLogger(DownloadController.class);
+
+    @RequestMapping("/{md5Hash}")
+    public void download(@PathVariable String md5Hash, HttpServletRequest req, HttpServletResponse res) {
+        FileEntry fileEntry = fileService.getFileByMd5Hash(md5Hash).orElseThrow(() -> new FileNotFoundException
+                (String.format("File with md5Hash %s not found", md5Hash)));
 
         try {
             serveFile(req, res, fileEntry.getFile());
         } catch (IOException e) {
+            logger.error("Error downloading file: {}", fileEntry.getName());
             e.printStackTrace();
         }
+
 
     }
 

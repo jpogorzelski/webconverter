@@ -1,6 +1,7 @@
 <#import "/spring.ftl" as spring>
 <#import "macros.ftl" as f>
 <#-- @ftlvariable name="currentUser" type="pl.pogorzelski.webconverter.domain.dto.CurrentUser" -->
+<#-- @ftlvariable name="message" type="pl.pogorzelski.webconverter.util.Message" -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,4 +59,8 @@
     </div>
 </nav>
 <div class="container">
-    <br><br><br><br>
+    <br><br>
+    <br><br>
+    <#if message??>
+        <div class="${message.type.cssClass}">${message.text}</div>
+    </#if>
